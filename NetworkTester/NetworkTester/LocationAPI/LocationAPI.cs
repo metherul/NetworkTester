@@ -1,5 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using System.Diagnostics;
+using Newtonsoft.Json;
 using System.Net;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
 
 namespace NetworkTester.LocationAPI
 {
@@ -10,7 +13,7 @@ namespace NetworkTester.LocationAPI
         /// </summary>
         /// <param name="_host">Can be an IP address, or website address. Ex: 8.8.8.8 or google.com</param>
         /// <returns></returns>
-        public static Location GetLocation(string _host)
+        public static LocationData GetLocation(string _host)
         {
             string json;
             var host = _host; 
@@ -21,15 +24,25 @@ namespace NetworkTester.LocationAPI
                 json = webClient.DownloadString(apiUrl);
             }
     
-            var jsonObject = JsonConvert.DeserializeObject<RootObject>(json);
+            var jsonObject = JsonConvert.DeserializeObject<RootObject>(
+                json,
+                new JsonSerializerSettings()
+                {
+                    Error = delegate(object sender, ErrorEventArgs args)
+                    {
+                        args.ErrorContext.Handled = true;
+                    }
+                }
+                );
 
             var latitude = jsonObject.Data.Geo.Latitude;
             var longitude = jsonObject.Data.Geo.Longitude;
-            var datetime = jsonObject.Data.Geo.Datetime;
+            var ip = jsonObject.Data.Geo.Ip;
 
-            var apiData = new Location(latitude, longitude, datetime);
+            Debug.WriteLine($"{ip} : {latitude}, {longitude}");
+
+            var apiData = new LocationData(latitude, longitude, ip);
             
-
             return apiData;
         }
     }

@@ -20,6 +20,7 @@ namespace NetworkTester.GoogleMaps
         {
             this.locations = locations;
         }
+
         public string StaticMapBuilder()
         {
             var center = FindCenter(locations[0], locations[locations.Count - 1]);

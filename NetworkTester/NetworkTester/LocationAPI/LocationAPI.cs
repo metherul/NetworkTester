@@ -9,7 +9,7 @@ namespace NetworkTester.LocationAPI
     public class LocationAPI
     {
         /// <summary>
-        /// Returns the latitude, longitude, and datetime for the specified host.
+        /// Returns the latitude, longitude, and IP for the specified host.
         /// </summary>
         /// <param name="_host">Can be an IP address, or website address. Ex: 8.8.8.8 or google.com</param>
         /// <returns></returns>
